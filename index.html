@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Artem Povaliaev — Agent-Driven Developer</title>
+<style>
+  :root {
+    --bg: #0f0f0f;
+    --surface: #171717;
+    --border: #262626;
+    --muted: #525252;
+    --text: #e5e5e5;
+    --white: #fafafa;
+    --accent: #a3e635;
+    --accent-dim: #4d7c0f;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+  }
+  a { color: inherit; text-decoration: none; }
+
+  /* Layout */
+  .container { max-width: 780px; margin: 0 auto; padding: 0 24px; }
+
+  /* Nav */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    border-bottom: 1px solid var(--border);
+    background: rgba(15,15,15,0.92);
+    backdrop-filter: blur(12px);
+  }
+  nav .inner {
+    max-width: 780px; margin: 0 auto; padding: 0 24px;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 52px;
+  }
+  .nav-name { font-weight: 600; color: var(--white); font-size: 14px; letter-spacing: 0.01em; }
+  .nav-links { display: flex; gap: 24px; }
+  .nav-links a { font-size: 13px; color: var(--muted); transition: color .15s; }
+  .nav-links a:hover { color: var(--white); }
+  .nav-status {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 12px; color: var(--accent);
+  }
+  .dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--accent);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  /* Hero */
+  .hero {
+    padding: 80px 0 64px;
+    border-bottom: 1px solid var(--border);
+  }
+  .hero-label {
+    font-size: 12px; color: var(--muted); letter-spacing: 0.08em;
+    text-transform: uppercase; margin-bottom: 20px;
+  }
+  .hero h1 {
+    font-size: clamp(32px, 5vw, 48px);
+    font-weight: 700; color: var(--white);
+    letter-spacing: -0.02em; line-height: 1.15;
+    margin-bottom: 20px;
+  }
+  .hero h1 span { color: var(--accent); }
+  .hero-desc {
+    font-size: 17px; color: var(--text);
+    max-width: 560px; line-height: 1.65;
+    margin-bottom: 32px;
+  }
+  .hero-meta {
+    display: flex; flex-wrap: wrap; gap: 20px;
+    font-size: 13px; color: var(--muted);
+    margin-bottom: 36px;
+  }
+  .hero-meta span { display: flex; align-items: center; gap: 6px; }
+  .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 9px 18px; border-radius: 6px;
+    font-size: 13px; font-weight: 500; cursor: pointer;
+    transition: all .15s;
+  }
+  .btn-primary {
+    background: var(--accent); color: #0f0f0f;
+    border: 1px solid var(--accent);
+  }
+  .btn-primary:hover { background: #bef264; }
+  .btn-secondary {
+    background: transparent; color: var(--text);
+    border: 1px solid var(--border);
+  }
+  .btn-secondary:hover { border-color: var(--muted); color: var(--white); }
+
+  /* Stats */
+  .stats {
+    padding: 48px 0;
+    border-bottom: 1px solid var(--border);
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 1px; background: var(--border);
+  }
+  .stat {
+    background: var(--bg); padding: 28px 24px;
+  }
+  .stat-num {
+    font-size: 32px; font-weight: 700; color: var(--white);
+    letter-spacing: -0.03em; line-height: 1;
+    margin-bottom: 6px;
+  }
+  .stat-num span { color: var(--accent); }
+  .stat-label { font-size: 12px; color: var(--muted); }
+
+  /* Section */
+  section { padding: 64px 0; border-bottom: 1px solid var(--border); }
+  .section-header { margin-bottom: 36px; }
+  .section-tag {
+    font-size: 11px; color: var(--accent); letter-spacing: 0.1em;
+    text-transform: uppercase; margin-bottom: 10px;
+  }
+  h2 {
+    font-size: 22px; font-weight: 700; color: var(--white);
+    letter-spacing: -0.01em;
+  }
+
+  /* Projects */
+  .projects { display: flex; flex-direction: column; gap: 2px; }
+  .project {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 24px 28px;
+    transition: border-color .15s;
+  }
+  .project:hover { border-color: var(--muted); }
+  .project-header {
+    display: flex; align-items: flex-start;
+    justify-content: space-between; gap: 16px;
+    margin-bottom: 10px;
+  }
+  .project-name {
+    font-size: 16px; font-weight: 600; color: var(--white);
+  }
+  .project-link {
+    font-size: 12px; color: var(--accent);
+    white-space: nowrap; margin-top: 2px;
+    opacity: 0.8; transition: opacity .15s;
+  }
+  .project-link:hover { opacity: 1; }
+  .project-desc { font-size: 14px; color: var(--text); margin-bottom: 14px; line-height: 1.55; }
+  .project-metric {
+    display: inline-block;
+    font-size: 12px; color: var(--accent);
+    background: rgba(163,230,53,0.08);
+    border: 1px solid rgba(163,230,53,0.2);
+    border-radius: 4px; padding: 3px 8px;
+    margin-bottom: 14px;
+  }
+  .tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tag {
+    font-size: 11px; color: var(--muted);
+    border: 1px solid var(--border);
+    border-radius: 4px; padding: 2px 7px;
+  }
+
+  /* Stack */
+  .stack-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 24px;
+  }
+  .stack-group h3 {
+    font-size: 11px; color: var(--muted);
+    text-transform: uppercase; letter-spacing: 0.08em;
+    margin-bottom: 12px;
+  }
+  .stack-items { display: flex; flex-wrap: wrap; gap: 7px; }
+  .stack-item {
+    font-size: 12px; color: var(--text);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 5px; padding: 4px 10px;
+  }
+
+  /* Experience */
+  .timeline { display: flex; flex-direction: column; gap: 0; }
+  .timeline-item {
+    display: grid; grid-template-columns: 110px 1fr;
+    gap: 24px; padding: 20px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .timeline-item:last-child { border-bottom: none; }
+  .timeline-year { font-size: 12px; color: var(--muted); padding-top: 2px; }
+  .timeline-content h3 { font-size: 15px; color: var(--white); margin-bottom: 4px; }
+  .timeline-content p { font-size: 13px; color: var(--muted); line-height: 1.5; }
+
+  /* Contact */
+  .contact-grid { display: flex; flex-wrap: wrap; gap: 12px; }
+  .contact-item {
+    display: flex; align-items: center; gap: 10px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px; padding: 14px 18px;
+    font-size: 14px; color: var(--text);
+    transition: border-color .15s;
+    min-width: 200px;
+  }
+  .contact-item:hover { border-color: var(--muted); color: var(--white); }
+  .contact-icon { font-size: 16px; width: 20px; text-align: center; }
+
+  /* Footer */
+  footer {
+    padding: 32px 0;
+    font-size: 12px; color: var(--muted);
+    text-align: center;
+  }
+
+  @media (max-width: 600px) {
+    .nav-links { display: none; }
+    .stats { grid-template-columns: repeat(2, 1fr); }
+    .timeline-item { grid-template-columns: 1fr; gap: 4px; }
+    .timeline-year { color: var(--accent); font-size: 11px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="inner">
+    <span class="nav-name">Artem Povaliaev</span>
+    <div class="nav-links">
+      <a href="#projects">Projects</a>
+      <a href="#stack">Stack</a>
+      <a href="#experience">Experience</a>
+      <a href="#education">Education</a>
+      <a href="#contact">Contact</a>
+    </div>
+    <div class="nav-status">
+      <div class="dot"></div>
+      Available part-time
+    </div>
+  </div>
+</nav>
+
+<div class="container">
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="hero-label">Python · AI · Agent-Driven Development</div>
+    <h1>I build <span>with AI agents</span>, not just by hand.</h1>
+    <p class="hero-desc">
+      Backend engineer in Tbilisi. I ship production AI systems — memory engines,
+      tutoring platforms, payment infrastructure — and I build them with agents in the loop.
+      Claude Code is how I work, not a tool I've tried. Currently shipping for three teams in parallel.
+    </p>
+    <div class="hero-meta">
+      <span>📍 Tbilisi, Georgia (UTC+4)</span>
+      <span>🗣 Russian · English</span>
+      <span>⏱ Available part-time, 3–4h/day</span>
+    </div>
+    <div class="hero-actions">
+      <a href="#contact" class="btn btn-primary">Get in touch</a>
+      <a href="#projects" class="btn btn-secondary">See projects</a>
+    </div>
+  </div>
+
+  <!-- Stats -->
+</div>
+
+<div class="stats">
+  <div class="stat">
+    <div class="stat-num">3<span>×</span></div>
+    <div class="stat-label">Active client teams shipping with agents</div>
+  </div>
+  <div class="stat">
+    <div class="stat-num">70<span>+</span></div>
+    <div class="stat-label">Telegram bots & Mini Apps in production</div>
+  </div>
+  <div class="stat">
+    <div class="stat-num">50<span>K</span></div>
+    <div class="stat-label">Messages/day on AI platform</div>
+  </div>
+  <div class="stat">
+    <div class="stat-num">&lt;100<span>ms</span></div>
+    <div class="stat-label">Latency on real-time systems</div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- Projects -->
+  <section id="projects">
+    <div class="section-header">
+      <div class="section-tag">Selected work</div>
+      <h2>Projects</h2>
+    </div>
+    <div class="projects">
+
+      <div class="project">
+        <div class="project-header">
+          <div class="project-name">Seitiate — AI Memory Engine</div>
+          <a href="https://seitiate.com" target="_blank" class="project-link">↗ seitiate.com</a>
+        </div>
+        <p class="project-desc">
+          Independent contractor on Seitiate, an open-source AI memory engine (AGPL-3.0). Implementing
+          knowledge crystallization, trust tiers, and commitment enforcement — direct realizations of
+          OCC primitives from published research papers. Engine powers a family of products
+          (life-os, closedclaw, sakme, mentora) via a context-engine-studio architecture.
+        </p>
+        <div class="project-metric">Long-term contract · agent-driven, dog-fooded development</div>
+        <div class="tags">
+          <span class="tag">Python</span><span class="tag">FastAPI</span>
+          <span class="tag">PostgreSQL</span><span class="tag">Multi-agent</span>
+          <span class="tag">AGPL-3.0</span><span class="tag">Claude Code</span>
+        </div>
+      </div>
+
+      <div class="project">
+        <div class="project-header">
+          <div class="project-name">AI Tutoring Platform — Academic Pilot</div>
+        </div>
+        <p class="project-desc">
+          Pedagogical tutoring system built on the Seitiate engine, in pilot for an academic institution
+          in Georgia. 4-pass safety gates run on every turn (maieutic / constraint / calibration / ambiguity),
+          with full replay traces and an IRB-compatible reproducibility bundle. Cloud Run deployment in EU,
+          SQLite + Litestream to Cloud Storage, p95 6.4s end-to-end with all guardrails firing.
+        </p>
+        <div class="project-metric">Live-rendered LLM pipeline · 4 guardrail passes · zero failures over benchmark</div>
+        <div class="tags">
+          <span class="tag">Python</span><span class="tag">Cloud Run</span>
+          <span class="tag">Multi-agent</span><span class="tag">Litestream</span>
+          <span class="tag">RL trajectories</span><span class="tag">Anthropic Claude</span>
+        </div>
+      </div>
+
+      <div class="project">
+        <div class="project-header">
+          <div class="project-name">Casino Payment Platform — Team of 2</div>
+        </div>
+        <p class="project-desc">
+          Backend, frontend and operations bot for an online-casino payment system handling deposits,
+          withdrawals, KYC and dispute flows. Five-role permission model
+          (Owner / Administrator / Manager / Merchant / Operator). Built by a 2-developer team using
+          agent-driven workflows — Claude Code as primary engineer, humans as planners and reviewers.
+        </p>
+        <div class="project-metric">Production fintech · ~80% of code authored or co-authored by agents</div>
+        <div class="tags">
+          <span class="tag">FastAPI</span><span class="tag">PostgreSQL</span>
+          <span class="tag">Telegram</span><span class="tag">Docker</span>
+          <span class="tag">uv</span><span class="tag">pytest</span>
+        </div>
+      </div>
+
+      <div class="project">
+        <div class="project-header">
+          <div class="project-name">Animaya — Multi-tenant AI Agent Platform</div>
+          <a href="https://main.animaya.me" target="_blank" class="project-link">↗ main.animaya.me</a>
+        </div>
+        <p class="project-desc">
+          My own platform for AI assistants. Each assistant runs in its own container with persistent memory,
+          custom tools, and personality. Includes an autonomous dev pipeline: GitHub issue → Planner →
+          Implementer → PR → CI → deploy, no human in the loop. Used as the daily harness for my own work.
+        </p>
+        <div class="project-metric">50,000+ messages/day · &lt;500ms response time</div>
+        <div class="tags">
+          <span class="tag">Python 3.12</span><span class="tag">FastAPI</span>
+          <span class="tag">Anthropic Claude</span><span class="tag">Docker</span>
+          <span class="tag">Traefik</span><span class="tag">PostgreSQL</span>
+        </div>
+      </div>
+
+      <div class="project">
+        <div class="project-header">
+          <div class="project-name">UK Vehicle History SaaS</div>
+          <a href="https://73auto.com" target="_blank" class="project-link">↗ 73auto.com</a>
+        </div>
+        <p class="project-desc">
+          Full-stack SaaS for vehicle history reports. Users register, subscribe via Stripe,
+          enter a VIN and get a full DVLA report in seconds. Covers the complete billing cycle:
+          checkout, portal, subscription management.
+        </p>
+        <div class="tags">
+          <span class="tag">Next.js 14</span><span class="tag">FastAPI</span>
+          <span class="tag">Stripe</span><span class="tag">DVLA API</span>
+          <span class="tag">MongoDB</span><span class="tag">Docker</span>
+        </div>
+      </div>
+
+      <div class="project">
+        <div class="project-header">
+          <div class="project-name">Polymarket Arbitrage Scanner</div>
+        </div>
+        <p class="project-desc">
+          Real-time WebSocket feed processor for Polymarket sports markets. Collects orderbook snapshots
+          at scale for backtesting arbitrage strategies. TimescaleDB compresses 35GB/day of raw data to 1.7GB.
+        </p>
+        <div class="project-metric">&lt;100ms latency · 99.8% uptime · ~400 snapshots/sec</div>
+        <div class="tags">
+          <span class="tag">Python</span><span class="tag">FastAPI</span>
+          <span class="tag">WebSocket</span><span class="tag">TimescaleDB</span>
+          <span class="tag">Redis</span><span class="tag">Prometheus</span>
+        </div>
+      </div>
+
+      <div class="project">
+        <div class="project-header">
+          <div class="project-name">Knock on the Coffin Lid</div>
+          <a href="https://store.steampowered.com/app/1123250/Knock_on_the_Coffin_Lid/" target="_blank" class="project-link">↗ Steam</a>
+        </div>
+        <p class="project-desc">
+          Shipped a deck-building roguelike on Steam with Slavic mythology setting. Grew from feature developer
+          to leading the team: sprint planning, code review, Steam API integration, custom tooling for designers,
+          memory optimisation, and analytics. Full cycle from prototype to store delivery.
+        </p>
+        <div class="tags">
+          <span class="tag">C# / Unity</span><span class="tag">Steam API</span>
+          <span class="tag">Steamworks</span><span class="tag">Team Lead</span>
+          <span class="tag">DevToDev analytics</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Stack -->
+  <section id="stack">
+    <div class="section-header">
+      <div class="section-tag">Technologies</div>
+      <h2>Stack</h2>
+    </div>
+    <div class="stack-grid">
+      <div class="stack-group">
+        <h3>Agentic Development</h3>
+        <div class="stack-items">
+          <span class="stack-item">Claude Code</span>
+          <span class="stack-item">Claude Agent SDK</span>
+          <span class="stack-item">MCP servers</span>
+          <span class="stack-item">Multi-agent orchestration</span>
+          <span class="stack-item">Tool use</span>
+          <span class="stack-item">Memory engines</span>
+          <span class="stack-item">Sub-agents</span>
+        </div>
+      </div>
+      <div class="stack-group">
+        <h3>AI / LLM</h3>
+        <div class="stack-items">
+          <span class="stack-item">Anthropic Claude</span>
+          <span class="stack-item">OpenAI</span>
+          <span class="stack-item">Gemini</span>
+          <span class="stack-item">RAG</span>
+          <span class="stack-item">RL trajectories</span>
+          <span class="stack-item">Tool-use contracts</span>
+        </div>
+      </div>
+      <div class="stack-group">
+        <h3>Backend</h3>
+        <div class="stack-items">
+          <span class="stack-item">Python</span>
+          <span class="stack-item">FastAPI</span>
+          <span class="stack-item">asyncio</span>
+          <span class="stack-item">Celery</span>
+          <span class="stack-item">Node.js</span>
+          <span class="stack-item">NestJS</span>
+        </div>
+      </div>
+      <div class="stack-group">
+        <h3>Frontend</h3>
+        <div class="stack-items">
+          <span class="stack-item">Next.js</span>
+          <span class="stack-item">React</span>
+          <span class="stack-item">TypeScript</span>
+          <span class="stack-item">Vue 3</span>
+          <span class="stack-item">Tailwind</span>
+        </div>
+      </div>
+      <div class="stack-group">
+        <h3>Data</h3>
+        <div class="stack-items">
+          <span class="stack-item">PostgreSQL</span>
+          <span class="stack-item">TimescaleDB</span>
+          <span class="stack-item">MongoDB</span>
+          <span class="stack-item">Redis</span>
+          <span class="stack-item">SQLAlchemy</span>
+        </div>
+      </div>
+      <div class="stack-group">
+        <h3>Infrastructure</h3>
+        <div class="stack-items">
+          <span class="stack-item">Docker</span>
+          <span class="stack-item">GitHub Actions</span>
+          <span class="stack-item">VPS</span>
+          <span class="stack-item">Traefik</span>
+          <span class="stack-item">Tailscale</span>
+        </div>
+      </div>
+      <div class="stack-group">
+        <h3>Telegram</h3>
+        <div class="stack-items">
+          <span class="stack-item">aiogram 3.x</span>
+          <span class="stack-item">Telethon</span>
+          <span class="stack-item">Mini Apps</span>
+          <span class="stack-item">Stars</span>
+          <span class="stack-item">Stripe</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Experience -->
+  <section id="experience">
+    <div class="section-header">
+      <div class="section-tag">Background</div>
+      <h2>Experience</h2>
+    </div>
+    <p style="font-size:20px;line-height:1.6;margin-bottom:40px;max-width:600px;color:var(--text);font-weight:400;letter-spacing:-0.01em;">
+      <span style="color:var(--accent);">Fintech banking tools.</span> A shipped Steam game. A Rust game engine.
+      <span style="color:var(--accent);">An AI platform processing 50K messages a day.</span>
+      Not a straight line — but every turn added something that the previous one couldn't.
+    </p>
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-year">2025 – now</div>
+        <div class="timeline-content">
+          <h3>Agent-Driven Developer — Memory engines, AI tutoring, fintech</h3>
+          <p>Working in parallel on three production codebases via agent-driven workflows: an open-source AI memory engine (Seitiate, AGPL-3.0); an AI tutoring platform piloting at an academic institution; and a casino payment system as part of a 2-developer team. Claude Code as the primary engineer; I plan, review, and ship.</p>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-year">2024 – 2025</div>
+        <div class="timeline-content">
+          <h3>Independent Developer — Python, AI & Automation</h3>
+          <p>Built Animaya (multi-tenant AI agent platform processing 50K+ messages/day), autonomous Claude Code dev pipelines, real-time trading tools. 70+ Telegram bots and Mini Apps shipped for clients across Russia, Georgia, and the UK.</p>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-year">Apr 2023 – Jan 2024</div>
+        <div class="timeline-content">
+          <h3>Independent Game Developer — DAO NFT Auto Battler</h3>
+          <p>Co-developed a DAO NFT auto battler game using a custom Rust engine (Geng) and ECS methodology. Focused on high-performance game systems and community-driven mechanics. Marked a pivot toward systems programming and autonomous tooling.</p>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-year">Jun 2022 – Apr 2023</div>
+        <div class="timeline-content">
+          <h3>Unity Developer — Tamashi Games</h3>
+          <p>Developed mobile games from scratch based on client specs. Defined timelines and risk assessments, managed a small team, delivered full cycle from prototype to App Store / Play Market.</p>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-year">May 2019 – Feb 2022</div>
+        <div class="timeline-content">
+          <h3>Unity Developer → Senior — RedBoon (Knock on the Coffin Lid, Steam)</h3>
+          <p>Lead developer on a shipped Steam game with unique Slavic deck-building mechanics. Grew from implementing features to leading the dev team: sprint planning, code review, Steam API integration, memory optimisation, analytics with DevToDev. Built custom tooling for designers and QA.</p>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-year">Sep 2016 – May 2019</div>
+        <div class="timeline-content">
+          <h3>Java Developer — Axiom Software (Fintech)</h3>
+          <p>Backend development on a fintech taxonomy banking tool. Java + JS-Vaadin frontend, PostgreSQL and Oracle DB, ORM implementation. Introduced to large-scale data systems and financial domain logic.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Education -->
+  <section id="education">
+    <div class="section-header">
+      <div class="section-tag">Education</div>
+      <h2>Education</h2>
+    </div>
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-year">2008 – 2013</div>
+        <div class="timeline-content">
+          <h3>Altai State Technical University</h3>
+          <p>Specialist degree in Information Security. Foundation in systems programming, network security, and software engineering — the base for everything that followed.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section id="contact">
+    <div class="section-header">
+      <div class="section-tag">Get in touch</div>
+      <h2>Contact</h2>
+    </div>
+    <div class="contact-grid">
+      <a href="mailto:gevergeorgia@gmail.com" class="contact-item">
+        <span class="contact-icon">✉</span>
+        gevergeorgia@gmail.com
+      </a>
+      <a href="https://t.me/gevernus" target="_blank" class="contact-item">
+        <span class="contact-icon">✈</span>
+        @gevernus on Telegram
+      </a>
+      <a href="https://main.animaya.me" target="_blank" class="contact-item">
+        <span class="contact-icon">⬡</span>
+        main.animaya.me
+      </a>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <div class="container">
+    Artem Povaliaev · Tbilisi, Georgia · Built with Claude Code
+  </div>
+</footer>
+
+</body>
+</html>
